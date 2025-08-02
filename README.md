@@ -1,7 +1,13 @@
 
-# ☸️ K8s + Open5GS Deployment — Prerequisites & Setup Guide
+# ☸️ K8s  Deployment — Prerequisites & Setup Guide
 
-This guide outlines the system layout, configuration requirements, and setup instructions for automating the deployment of a **Kubernetes cluster** with an **Open5GS 5G Core** using Terraform and shell scripts.
+This guide outlines the system layout, configuration requirements, and setup instructions for automating the deployment of a **Kubernetes cluster**  using Terraform and shell scripts.
+The interface changes referenced in this setup (e.g., eth0, eth1) are specific to the Open5GS 5G Core network configuration. These mappings facilitate data-plane and control-plane segregation for accurate emulation of telecom network behavior.
+
+However, if your goal is solely to set up a Kubernetes cluster (without deploying Open5GS), you may skip renaming or reassigning network interfaces. The default interface names assigned by your cloud provider or OS (such as ens3, eth0, enp0s8, etc.) will work fine for basic K8s functionality.
+
+✅ This simplification helps reduce setup complexity and avoids the need for manual udev rules or interface remapping during early experimentation.
+
 
 ---
 
@@ -74,7 +80,6 @@ Ensure the working directory (usually the **home directory** of the master node 
 ```
 ├── master_node.sh              # Sets up Kubernetes master
 ├── worker_node.sh              # Joins worker node to cluster
-├── open5gs-deployment.sh       # Deploys Open5GS on K8s via Helm
 └── terraform/                  # Infra provisioning setup
     ├── main.tf                 # Terraform infra logic
     └── variable.tf             # SSH IPs, keys, and script paths
@@ -87,7 +92,7 @@ Ensure the working directory (usually the **home directory** of the master node 
 Make sure shell scripts are executable:
 
 ```bash
-chmod +x master_node.sh worker_node.sh open5gs-deployment.sh
+chmod +x master_node.sh worker_node.sh 
 ```
 
 Ensure Terraform scripts using `local-exec` have proper execution permissions and accessible paths.
@@ -122,7 +127,7 @@ Update these variables as needed:
 | `private_key_path`    | Path to your SSH private key            |
 | `master_script_path`  | Full path to `master_node.sh`           |
 | `worker_script_path`  | Full path to `worker_node.sh`           |
-| `open5gs_script_path` | Full path to `open5gs-deployment.sh`    |
+
 
 ### Modify in terminal:
 
@@ -149,7 +154,7 @@ This will:
 
 - Spin up the required **GCP instances**
 - Configure **Kubernetes** master and worker nodes
-- Deploy **Open5GS** components via Helm
+
 
 ---
 
